@@ -151,6 +151,12 @@ body.ui-ready .layout .card:nth-child(2){animation-delay:.12s}
 @media (max-width:560px){.apple-orbit{width:160px;height:160px}.apple-photo-wrap{width:136px;height:136px}.sound-panel{gap:8px;padding:11px 7px}.sound-volume input{width:58px}}
 @media(prefers-reduced-motion:reduce){.apple-orbit.spinning .apple-photo,.apple-orbit.spinning .apple-photo-wrap{animation:none!important}}
 </style>
+
+<link rel="manifest" href="./manifest.webmanifest">
+<meta name="theme-color" content="#8975ff">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="icon" type="image/svg+xml" href="./icons/icon.svg">
 </head>
 <body><main class="shell">
 <header class="top"><div class="logo">✦ Study<span>Flow</span></div><div class="brand-actions">
@@ -354,6 +360,19 @@ $('memoryForm').addEventListener('submit',e=>{e.preventDefault();const topic=$('
   };
   const orbit=document.getElementById('appleOrbit');
   orbit.setAttribute('aria-label','تفاحة حمراء فوتوغرافية تتحرك أثناء جلسة التركيز');
+})();
+</script>
+
+<script>
+(function(){
+  if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('PWA:',err)));}
+  let installPrompt=null;
+  window.addEventListener('beforeinstallprompt',event=>{event.preventDefault();installPrompt=event;const b=document.getElementById('installStudyFlow');if(b)b.hidden=false;});
+  window.addEventListener('appinstalled',()=>{installPrompt=null;const b=document.getElementById('installStudyFlow');if(b)b.hidden=true;});
+  document.addEventListener('DOMContentLoaded',()=>{
+    const btn=document.createElement('button');btn.id='installStudyFlow';btn.textContent='📲 تثبيت StudyFlow على الهاتف';btn.hidden=true;btn.style.cssText='position:fixed;bottom:18px;left:18px;z-index:9999;background:#8975ff;color:white;border:0;border-radius:16px;padding:12px 18px;box-shadow:0 8px 30px #0005;font-weight:700';
+    btn.addEventListener('click',async()=>{if(!installPrompt)return;const p=installPrompt;installPrompt=null;btn.hidden=true;await p.prompt();});document.body.appendChild(btn);
+  });
 })();
 </script>
 </body></html>
